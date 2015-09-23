@@ -1,0 +1,1 @@
+This is a simple todo application, created for practice purposes.
