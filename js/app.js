@@ -25,6 +25,17 @@ var createNewTaskElement = function (taskString) {
 	var deleteButton = document.createElement("button");
 	//Each element needs modifying 
 
+	checkBox.type = "checkbox";
+	editInput.type = "text";
+
+	editButton.textContent = "Edit";
+	editButton.className = "edit";
+	
+	deleteButton.textContent = "Delete";
+	deleteButton.className = "delete";
+
+	label.textContent = taskString;
+
 	//Each element needs appending
 	listItem.appendChild(checkBox);
 	listItem.appendChild(label);
@@ -40,12 +51,13 @@ var addTask = function () {
 	console.log("Add task...");
 	//When the Add button is pressed
 	//Create a new list item with the text of #new-task:
-	var listItem = createNewTaskElement("Some task")
+	var listItem = createNewTaskElement(taskInput.value);
 
 	//Append listItem to incompleteTasksHolder
 	incompleteTasksHolder.appendChild(listItem);
 	bindTasksEvents(listItem, taskIncomplete);
 
+	taskInput.value = "";
 };
 
 
@@ -54,15 +66,26 @@ var addTask = function () {
 //Edit an existing task
 var editTask = function () {
 	console.log("Edit task...");
-	//When the edit button is pressed
-		//If the class of the parent is .editmode
-			//Switch from .editmode
-			//label text becomes the input's value
-		//else
-			//Switch to .editMode
-			//input value becomes the label text
 
-		//Toggle .editMode on the parent
+	var listItem = this.parentNode;
+
+	var editInput = listItem.querySelector("input[type=text]");
+	var label = listItem.querySelector("label");
+
+	var containsClass = listItem.classList.contains("editMode");
+	//When the edit button is pressed
+	//If the class of the parent is .editmode
+	if (containsClass) {
+		//Switch from .editmode
+		//label text becomes the input's value
+		label.textContent = editInput.value;
+	} else {
+		//Switch to .editMode
+		//input value becomes the label text
+		editInput.value = label.textContent;
+	}
+	//Toggle .editMode on the parent
+	listItem.classList.toggle("editMode");
 };
 
 
@@ -119,8 +142,7 @@ var bindTasksEvents = function (taskListItem, checkboxEventHandler) {
 
 
 //Set the click handler to the addTask function
-addButton.onclick = addTask;
-
+addButton.addEventListener("click", addTask);
 
 //Cycle over incompleteTasksHolder ul items
 	//for each list item
